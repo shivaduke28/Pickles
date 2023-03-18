@@ -8,10 +8,17 @@ namespace Pickles.SeaWater
     [ExecuteAlways]
     public sealed class SeaWaterManager : MonoBehaviour
     {
-        [SerializeField] Vector3 extinction;
-        [SerializeField] Vector3 absorptionRatio;
-        [SerializeField, Range(3, 5)] float slope;
-        [SerializeField, Range(0, 1)] float ffa;
+        [Header("Extinction (Absorption + Scattering)")]
+        [SerializeField, Range(0, 1.5f)] float extinctionR = 1;
+        [SerializeField, Range(0, 1f)] float extinctionG = 0.02f;
+        [SerializeField, Range(0, 1f)] float extinctionB = 0.01f;
+        [Header("Absorption Ratio (Absorption / Extinction)")]
+        [SerializeField, Range(0, 1)] float absorptionRatioR = 1f;
+        [SerializeField, Range(0, 1)] float absorptionRatioG = 0.8f;
+        [SerializeField, Range(0, 1)] float absorptionRatioB = 0.2f;
+
+        [SerializeField, Range(3, 5)] float slope = 4f;
+        [SerializeField, Range(0, 1)] float ffa = 0.2f;
         [SerializeField, Range(1, 100)] float inScatteringPower = 1;
 
         static class ShaderProperty
@@ -26,8 +33,8 @@ namespace Pickles.SeaWater
 
         void LateUpdate()
         {
-            Shader.SetGlobalVector(ShaderProperty.Extinction, extinction);
-            Shader.SetGlobalVector(ShaderProperty.AbsorptionRatio, absorptionRatio);
+            Shader.SetGlobalVector(ShaderProperty.Extinction, new Vector3(extinctionR, extinctionG,extinctionB));
+            Shader.SetGlobalVector(ShaderProperty.AbsorptionRatio, new Vector3(absorptionRatioR, absorptionRatioG, absorptionRatioB));
             Shader.SetGlobalFloat(ShaderProperty.Slope, slope);
             Shader.SetGlobalFloat(ShaderProperty.FFa, ffa);
             Shader.SetGlobalFloat(ShaderProperty.InScatteringPower, inScatteringPower);
